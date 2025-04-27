@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Discord Automod Bypass Tool">
+    <meta property="og:description" content="A tool for bypassing Discord's automod filters">
+    <title>Discord Automod Bypass Tool</title>
+    <style>
+        :root {
+            --primary: #5865F2;
+            --primary-dark: #4752C4;
+            --secondary: #2C2F33;
+            --dark: #23272A;
+            --light: #FFFFFF;
+            --gray: #99AAB5;
+            --success: #43B581;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background-color: var(--secondary);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--light);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .version {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            vertical-align: middle;
+            font-weight: 600;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--light);
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.3);
+        }
+        
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.3);
+        }
+        
+        .output-container {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            min-height: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            word-break: break-word;
+        }
+        
+        .output-text {
+            color: var(--light);
+            font-size: 1rem;
+        }
+        
+        .button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+        
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button-container {
+            text-align: center;
+        }
+        
+        .tooltip {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>DISCORD AUTOMOD BYPASSER <span class="version">V2</span></h1>
+            
+            <textarea id="inputBox" placeholder="Type your message here..." autofocus></textarea>
+            
+            <select id="bypassSelect">
+                <option value="invisible">Universal (basic)</option>
+                <option value="unicode">Unicode Leetspeak</option>
+                <option value="cyrillic">Cyrillic Letters</option>
+                <option value="emoji">Emoji Separator</option>
+                <option value="dot">Dot Separator</option>
+                <option value="rot13">ROT13 Obfuscation</option>
+                <option value="reverse">Reverse Text</option>
+                <option value="strikethrough">Combining Characters</option>
+                <option value="base64">Base64 Encode</option>
+                <option value="combo">Undetectable</option>
+            </select>
+            
+            <div class="output-container">
+                <div id="outputText" class="output-text"></div>
+            </div>
+            
+            <div class="button-container">
+                <button id="copyButton" class="button">Copy to Clipboard</button>
+            </div>
+        </div>
+        
+        <footer>
+            &copy; 2025 Discord Bypass Tool - Use Responsibly
+        </footer>
+    </div>
+    
+    <div id="tooltip" class="tooltip">Copied to clipboard!</div>
+    
+    <script>
+        // Function to insert invisible character between each character of text
+        function insertInvisibleChar(text) {
+            return text.split('').join('​'); // Using zero-width space
+        }
+        
+        // Function to convert text to Unicode leetspeak
+        function unicodeLeetspeak(text) {
+            const mapping = {
+                'a': '𝖺', 'b': '𝖻', 'c': '𝖼', 'd': '𝖽', 'e': '𝖾', 'f': '𝖿', 'g': '𝗀', 'h': '𝗁',
+                'i': '𝗂', 'j': '𝗃', 'k': '𝗄', 'l': '𝗅', 'm': '𝗆', 'n': '𝗇', 'o': '𝗈', 'p': '𝗉',
+                'q': '𝗊', 'r': '𝗋', 's': '𝗌', 't': '𝗍', 'u': '𝗎', 'v': '𝗏', 'w': '𝗐', 'x': '𝗑',
+                'y': '𝗒', 'z': '𝗓', 'A': '𝖠', 'B': '𝖡', 'C': '𝖢', 'D': '𝖣', 'E': '𝖤', 'F': '𝖥',
+                'G': '𝖦', 'H': '𝖧', 'I': '𝖨', 'J': '𝖩', 'K': '𝖪', 'L': '𝖫', 'M': '𝖬', 'N': '𝖭',
+                'O': '𝖮', 'P': '𝖯', 'Q': '𝖰', 'R': '𝖱', 'S': '𝖲', 'T': '𝖳', 'U': '𝖴', 'V': '𝖵',
+                'W': '𝖶', 'X': '𝖷', 'Y': '𝖸', 'Z': '𝖹'
+            };
+            
+            return text.split('').map(char => mapping[char] || char).join('');
+        }
+        
+        // Function to convert text using Cyrillic look-alikes
+        function cyrillicBypass(text) {
+            const mapping = {
+                'a': 'а', 'e': 'е', 'o': 'о', 'p': 'р', 'c': 'с', 'x': 'х', 'y': 'у',
+                'A': 'А', 'B': 'В', 'E': 'Е', 'K': 'К', 'M': 'М', 'H': 'Н', 'O': 'О',
+                'P': 'Р', 'C': 'С', 'T': 'Т', 'X': 'Х', 'Y': 'У'
+            };
+            
+            return text.split('').map(char => mapping[char] || char).join('');
+        }
+        
+        // Function to insert emoji between each word
+        function emojiSeparator(text) {
+            const emojis = ['⭐', '🔥', '💫', '✨', '⚡', '💥', '🌟', '🎯', '🌈'];
+            return text.split(' ').join(' ' + emojis[Math.floor(Math.random() * emojis.length)] + ' ');
+        }
+        
+        // Function to insert dot between each character
+        function dotSeparator(text) {
+            return text.split('').join('.');
+        }
+        
+        // ROT13 function
+        function rot13(text) {
+            return text.replace(/[a-zA-Z]/g, function(char) {
+                const base = char <= 'Z' ? 65 : 97;
+                return String.fromCharCode((char.charCodeAt(0) - base + 13) % 26 + base);
+            });
+        }
+        
+        // Reverse text function
+        function reverseText(text) {
+            return text.split('').reverse().join('');
+        }
+        
+        // Combining characters (strikethrough-like effect)
+        function combiningChars(text) {
+            const combiningChar = '\u0336'; // Combining long stroke overlay
+            return text.split('').join(combiningChar) + combiningChar;
+        }
+        
+        // Base64 encode function
+        function base64Encode(text) {
+            return btoa(text);
+        }
+        
+        // Combination of multiple methods for "undetectable"
+        function comboBypass(text) {
+            // Apply multiple transformations
+            let result = insertInvisibleChar(text);
+            result = unicodeLeetspeak(result);
+            return result;
+        }
+        
+        // Function to apply the selected bypass method
+        function applyBypass(text, method) {
+            switch (method) {
+                case 'invisible':
+                    return insertInvisibleChar(text);
+                case 'unicode':
+                    return unicodeLeetspeak(text);
+                case 'cyrillic':
+                    return cyrillicBypass(text);
+                case 'emoji':
+                    return emojiSeparator(text);
+                case 'dot':
+                    return dotSeparator(text);
+                case 'rot13':
+                    return rot13(text);
+                case 'reverse':
+                    return reverseText(text);
+                case 'strikethrough':
+                    return combiningChars(text);
+                case 'base64':
+                    return base64Encode(text);
+                case 'combo':
+                    return comboBypass(text);
+                default:
+                    return text;
+            }
+        }
+        
+        // Function to show the transformed text
+        function showText() {
+            const inputText = document.getElementById('inputBox').value;
+            const bypassMethod = document.getElementById('bypassSelect').value;
+            const outputText = applyBypass(inputText, bypassMethod);
+            
+            document.getElementById('outputText').textContent = outputText;
+        }
+        
+        // Function to copy text to clipboard
+        function copyToClipboard() {
+            const outputText = document.getElementById('outputText').textContent;
+            
+            if (outputText) {
+                navigator.clipboard.writeText(outputText).then(() => {
+                    const tooltip = document.getElementById('tooltip');
+                    tooltip.classList.add('show');
+                    
+                    setTimeout(() => {
+                        tooltip.classList.remove('show');
+                    }, 1500);
+                });
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('inputBox').addEventListener('input', showText);
+        document.getElementById('bypassSelect').addEventListener('change', showText);
+        document.getElementById('copyButton').addEventListener('click', copyToClipboard);
+        
+        // Initialize the output on page load
+        showText();
+    </script>
+</body>
+</html>
